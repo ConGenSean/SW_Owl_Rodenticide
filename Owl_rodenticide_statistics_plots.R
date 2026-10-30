@@ -6,7 +6,7 @@ library(car)
 setwd("D:/ECU/Owl_rodenticide/DraftPaper/")
 
 ####Load data and arrange for plotting####
-raw_data <- read.csv(file = "./Owl_rodenticide_raw.csv")
+raw_data <- read.csv(file = "../Owl_rodenticide_raw_corrected.csv")
 rd2 <- raw_data %>%
   pivot_longer(cols = 6:13, names_to = "Rodenticide", values_to = "Exposure")
 rd2$Rodenticide <- as.factor(rd2$Rodenticide)
@@ -224,7 +224,7 @@ ggsave(filename = "Total_AR_donuts_relabelled.png", plot = gg_donut, device = "p
 ####Species comparisons####
 ###Kruskal-Wallis test for between species for total AR
 kruskal.test(Total_AR ~ Species, data = raw_data)
-#Kruskal-Wallis chi-squared = 10.99, df = 1, p-value = 0.0009159 - v. sig.
+#Kruskal-Wallis chi-squared = 11.151, df = 1, p-value = 0.00084 - v. sig.
 
 ###KW test between species for each AR
 species_t_test <- rd2 %>%
@@ -238,7 +238,7 @@ species_t_test <- rd2 %>%
 #2 Bromadiolone  0.618  0.432  
 #3 Coumatetralyl 0.0373 0.847  
 #4 Difenacoum    0.765  0.382  
-#5 Difethialone  0.0120 0.913  
+#5 Difethialone  0.234  0.629  
 #6 Flocoumafen   5.97   0.0145 *
 #7 Pindone       1.59   0.208  
 #8 Warfarin      1.59   0.208   
@@ -247,7 +247,7 @@ species_t_test <- rd2 %>%
 ###Species together###
 ##Kruskal-Wallis test between urban types for total AR
 kruskal.test(Total_AR ~ UrbanType, data = raw_data)
-#Kruskal-Wallis chi-squared = 2.1915, df = 1, p-value = 0.1388 - non. sig.
+#Kruskal-Wallis chi-squared = 2.1214, df = 1, p-value = 0.1453 - non. sig.
 
 ##KW test between urban types for each AR
 urbantype_t_test <- rd2 %>%
@@ -261,7 +261,7 @@ urbantype_t_test <- rd2 %>%
 #2 Bromadiolone   2.15   0.142 
 #3 Coumatetralyl  0.107  0.743 
 #4 Difenacoum     1.47   0.225 
-#5 Difethialone   3.23   0.0722 - marginal not
+#5 Difethialone   1.93   0.165
 #6 Flocoumafen    4.67   0.0307 - yes
 #7 Pindone        0.692  0.405 
 #8 Warfarin       0.692  0.405 
@@ -290,7 +290,7 @@ urbantype_kw_barn <- barn_long  %>%
 #2 Bromadiolone    2.49     0.115   
 #3 Coumatetralyl   0.0462   0.830   
 #4 Difenacoum      3.03     0.0817   - marginal non-sig.
-#5 Difethialone    2.59     0.108   
+#5 Difethialone    1.66     0.197   
 #6 Flocoumafen     1.25     0.264   
 #7 Pindone       NaN      NaN       
 #8 Warfarin      NaN      NaN      
@@ -327,18 +327,18 @@ urbantype_kw_mask <- mask_long  %>%
 two_way_total <- aov(Total_AR ~ Species * UrbanType, data = raw_data)
 summary(two_way_total)
 #                  Df SumSq   MeanSq  Fvalue Pr(>F)    
-#Species            1 0.4060  0.4060  17.028 0.000181 *** - v. sig.
-#UrbanType          1 0.1964  0.1964   8.236 0.006532 **  - sig.
-#Species:UrbanType  1 0.0369  0.0369   1.548 0.220738     - non.sig
+#Species            1 0.4060  0.4063  17.044 0.00018 *** - v. sig.
+#UrbanType          1 0.1964  0.1961   8.227 0.00656 **  - sig.
+#Species:UrbanType  1 0.0369  0.0368   1.545 0.22111     - non.sig
 #Residuals         40 0.9538  0.0238                     
 
 ##Two-way manova: considers interaction of species and urbantype on all rodenticide dosages##
 two_way_manova <- manova(cbind(Warfarin, Pindone, Flocoumafen, Difethialone, Difenacoum, Coumatetralyl, Bromadiolone, Brodifacoum) ~ Species * UrbanType, data = raw_data)
 summary(two_way_manova)
 #                 Df  Pillai    approx F numDf  denDf Pr(>F)   
-#Species            1 0.45930   3.5040      8     33 0.004918 ** - significant effect of species
-#UrbanType          1 0.31781   1.9217      8     33 0.089782 . - near significant effect of urban type
-#Species:UrbanType  1 0.14669   0.7091      8     33 0.681530   - non-significant interaction
+#Species            1 0.46004   3.5145      8     33 0.004827 ** - significant effect of species
+#UrbanType          1 0.31622   1.9076      8     33 0.092171 . - near significant effect of urban type
+#Species:UrbanType  1 0.14689   0.7102      8     33 0.680604   - non-significant interaction
 #Residuals          40 
 
 ##Two-way anova: considers interaction of species and urbantype on brodifacoum##
@@ -363,7 +363,7 @@ summary(m)
 
 #F values of ANOVAs on aligned responses not of interest (should all be ~0):
 #Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#0.0000  0.0000  0.0000  0.2174  0.1301  1.1311
+#0.0000  0.0000  0.0000  0.2177  0.1300  1.1330
 
 #F values of ANOVAs on aligned responses not of interest are not all ~0.
 #ART may not be appropriate.
@@ -376,7 +376,7 @@ anova(m)
 #Df Df.res F value     Pr(>F)    
 #1 Species            1     40 14.5431 0.00046416 *** - v. sig. effect of species
 #2 UrbanType          1     40  1.7339 0.19540291    
-#3 Species:UrbanType  1     40  3.1816 0.08205791   . - marginally non-sig. interaction
+#3 Species:UrbanType  1     40  3.1790 0.08217987   . - marginally non-sig. interaction
 
 #Signif. codes:   0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
 
