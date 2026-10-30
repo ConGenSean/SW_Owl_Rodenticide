@@ -3,7 +3,6 @@ library(ggplot2)
 library(ggh4x)
 library(broom)
 library(car)
-setwd("D:/ECU/Owl_rodenticide/DraftPaper/")
 
 ####Load data and arrange for plotting####
 raw_data <- read.csv(file = "../Owl_rodenticide_raw_corrected.csv")
